@@ -20,6 +20,7 @@ import {
 } from "../config/config.js";
 import { applyPluginAutoEnable } from "../config/plugin-auto-enable.js";
 import { resolveMainSessionKey } from "../config/sessions.js";
+import type { GatewayAuthRateLimitConfig } from "../config/types.gateway.js";
 import { clearAgentRunContext, onAgentEvent } from "../infra/agent-events.js";
 import {
   ensureControlUiAssetsBuilt,
@@ -122,13 +123,12 @@ const logSecrets = log.child("secrets");
 const gatewayRuntime = runtimeForLogger(log);
 const canvasRuntime = runtimeForLogger(logCanvas);
 
-type AuthRateLimitConfig = Parameters<typeof createAuthRateLimiter>[0];
-
-function createGatewayAuthRateLimiters(rateLimitConfig: AuthRateLimitConfig | undefined): {
+function createGatewayAuthRateLimiters(rateLimitConfig: GatewayAuthRateLimitConfig | undefined): {
   rateLimiter?: AuthRateLimiter;
   browserRateLimiter: AuthRateLimiter;
 } {
-  const rateLimiter = rateLimitConfig?.enabled === false ? undefined : createAuthRateLimiter(rateLimitConfig);
+  const rateLimiter =
+    rateLimitConfig?.enabled === false ? undefined : createAuthRateLimiter(rateLimitConfig);
   // Browser-origin WS auth attempts always use loopback-non-exempt throttling.
   const browserRateLimiter = createAuthRateLimiter({
     ...rateLimitConfig,
