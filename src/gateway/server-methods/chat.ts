@@ -314,7 +314,7 @@ function resolveTranscriptPath(params: {
   agentId?: string;
 }): string | null {
   const { sessionId, storePath, sessionFile, agentId } = params;
-  if (!storePath && !sessionFile) {
+  if (!storePath && !sessionFile && !agentId) {
     return null;
   }
   try {
@@ -458,6 +458,7 @@ function persistAbortedPartials(params: {
     return;
   }
   const { storePath, entry } = loadSessionEntry(params.sessionKey);
+  const agentId = resolveSessionAgentId({ sessionKey: params.sessionKey });
   for (const snapshot of params.snapshots) {
     const sessionId = entry?.sessionId ?? snapshot.sessionId ?? snapshot.runId;
     const appended = appendAssistantTranscriptMessage({
@@ -465,6 +466,7 @@ function persistAbortedPartials(params: {
       sessionId,
       storePath,
       sessionFile: entry?.sessionFile,
+      agentId,
       createIfMissing: true,
       idempotencyKey: `${snapshot.runId}:assistant`,
       abortMeta: {
