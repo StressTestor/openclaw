@@ -25,7 +25,8 @@ enum HostEnvSecurityPolicy {
         "SSLKEYLOGFILE",
         "GLIBC_TUNABLES",
         "JAVA_TOOL_OPTIONS",
-        "JDK_JAVA_OPTIONS"
+        "JDK_JAVA_OPTIONS",
+        "_JAVA_OPTIONS"
     ]
 
     static let blockedOverrideKeys: Set<String> = [
